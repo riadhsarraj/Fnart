@@ -76,9 +76,11 @@ export default function Nav() {
           <ul className="nav-menu-right">
             <hr />
             <li>
-              <Link to="/">
-                <button className="btnlogin">Logout</button>
-              </Link>
+                <button className="btnlogin" onClick={() => {
+                    localStorage.removeItem("userID");
+                    window.location.replace("/");
+                  }}>Logout</button>
+              
             </li>
           </ul>
           <div className="nav-icon" onClick={handleClick}>

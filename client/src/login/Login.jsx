@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Axios from "axios";
 import { useCookies } from "react-cookie";
 import "./Login.css";
@@ -7,166 +7,165 @@ import "bootstrap/dist/js/bootstrap.bundle.min.js";
 
 export default function Login() {
   const [log, setLog] = useState(true);
-  const [name, setName] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const [_, setCookies] = useCookies(["access_token"]);
 
+  const [UserData, setUserData] = useState({
+ 
+    email: "",
+    password: "",
+  });
   const createUser = async (e) => {
     e.preventDefault();
     await Axios.post("http://localhost:3001/createUser", {
-      name: name,
+      username: username,
       password: password,
       email: email,
     });
     alert("user created");
   };
 
-  const login = async (e) => {
-    e.preventDefault();
-    const response = await Axios.post("http://localhost:3001/login", {
-      password: password,
-      email: email,
-    });
-    setCookies("access_token", response.data.token);
-    window.localStorage.setItem("userID", response.data.userID);
-    window.location.replace("/Home");
+ // const login = async (e) => {
+  //  e.preventDefault();
+  //  const response = await Axios.post("http://localhost:3001/login", {
+  //    password: password,
+  //    email: email,
+  //  });
+  //  setCookies("access_token", response.data.token);
+  //  window.localStorage.setItem("userID", response.data.userID);
+  //  window.location.replace("/Home");
+ // };
+ const changeHandler = (e) => {
+  setUserData({ ...UserData, [e.target.name]: e.target.value });
+
+};
+  const login = async () => {
+    let responseData;
+    await fetch("http://localhost:3001/login", {
+      method: "POST",
+      headers: {
+        Accept: "application/form-data",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(UserData),
+    })
+      .then((response) => response.json())
+      .then((data) => (responseData = data));
+    if (responseData.success) {
+      localStorage.setItem("userID", responseData.token);
+      window.location.replace("/home");
+    } else {
+      alert(responseData.errors);
+    }
   };
 
   return (
     <div className="home">
-      <div className="col-md-6 mx-auto p-0">
-        <div className="card">
-          <div className="login-box">
-            <div className="login-snip">
-              <input
-                id="tab-1"
-                type="radio"
-                name="tab"
-                className="sign-in"
-                checked
-              />
-              <label
-                htmlFor="tab-1"
-                className="tab"
-                onClick={() => setLog(true)}
-              >
-                Login
-              </label>
-              <input id="tab-2" type="radio" name="tab" className="sign-up" />
-              <label
-                htmlFor="tab-2"
-                className="tab"
-                onClick={() => setLog(false)}
-              >
-                Sign Up
-              </label>
-              <div className="login-space">
-                <div className="login">
-                  {log ? (
-                    <div>
-                      <form name="form" action="login.php" method="POST">
-                        <div className="group">
-                          <label htmlFor="user" className="label">
-                            Email
-                          </label>
-                          <input
-                            id="email"
-                            name="email"
-                            type="email"
-                            className="input"
-                            placeholder="Enter your email"
-                            onChange={(e) => setEmail(e.target.value)}
-                          />
-                        </div>
-                        <div className="group">
-                          <label htmlFor="pass" className="label">
-                            Password
-                          </label>
-                          <input
-                            id="pass"
-                            name="pass"
-                            type="password"
-                            className="input"
-                            data-type="password"
-                            placeholder="Enter your password"
-                            onChange={(e) => setPassword(e.target.value)}
-                          />
-                        </div>
-                        <div className="group">
-                          <input
-                            type="submit"
-                            className="button"
-                            value="Sign In"
-                            onClick={login}
-                          />
-                        </div>
+      <div className="e-card playing">
+        <div className="image">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            className="icon"
+          >
+            <path
+              fill="currentColor"
+              d="M19.4133 4.89862L14.5863 2.17544C12.9911 1.27485 11.0089 1.27485 9.41368 2.17544L4.58674 4.89862C2.99153 5.7992 2 7.47596 2 9.2763V14.7235C2 16.5238 2.99153 18.2014 4.58674 19.1012L9.41368 21.8252C10.2079 22.2734 11.105 22.5 12.0046 22.5C12.6952 22.5 13.3874 22.3657 14.0349 22.0954C14.2204 22.018 14.4059 21.9273 14.5872 21.8252L19.4141 19.1012C19.9765 18.7831 20.4655 18.3728 20.8651 17.8825C21.597 16.9894 22 15.8671 22 14.7243V9.27713C22 7.47678 21.0085 5.7992 19.4133 4.89862ZM4.10784 14.7235V9.2763C4.10784 8.20928 4.6955 7.21559 5.64066 6.68166L10.4676 3.95848C10.9398 3.69152 11.4701 3.55804 11.9996 3.55804C12.5291 3.55804 13.0594 3.69152 13.5324 3.95848L18.3593 6.68166C19.3045 7.21476 19.8922 8.20928 19.8922 9.2763V9.75997C19.1426 9.60836 18.377 9.53091 17.6022 9.53091C14.7929 9.53091 12.1041 10.5501 10.0309 12.3999C8.36735 13.8847 7.21142 15.8012 6.68783 17.9081L5.63981 17.3165C4.69466 16.7834 4.10699 15.7897 4.10699 14.7235H4.10784ZM10.4676 20.0413L8.60933 18.9924C8.94996 17.0479 9.94402 15.2665 11.4515 13.921C13.1353 12.4181 15.3198 11.5908 17.6022 11.5908C18.3804 11.5908 19.1477 11.6864 19.8922 11.8742V14.7235C19.8922 15.2278 19.7589 15.7254 19.5119 16.1662C18.7615 15.3596 17.6806 14.8528 16.4783 14.8528C14.2136 14.8528 12.3781 16.6466 12.3781 18.8598C12.3781 19.3937 12.4861 19.9021 12.68 20.3676C11.9347 20.5316 11.1396 20.4203 10.4684 20.0413H10.4676Z"
+            ></path>
+          </svg>
+        </div>
+        <div className="wave"></div>
+        <div className="wave"></div>
+        <div className="wave"></div>
+        <div className="infotop">
+          <button className="but" onClick={() => setLog(true)}>
+            Sign-in
+          </button>
+          <button className="but" onClick={() => setLog(false)}>
+            Sign-up
+          </button>
 
-                        <div className="hr"></div>
-                        <div className="foot">
-                          <a href="#">Forgot Password?</a>
-                        </div>
-                      </form>
-                    </div>
-                  ) : (
-                    <div>
-                      <form name="form" action="signup.php" method="POST">
-                        <div className="group">
-                          <label htmlFor="user" className="label">
-                            Username
-                          </label>
-                          <input
-                            id="user"
-                            name="user"
-                            type="text"
-                            className="input"
-                            placeholder="Create your Username"
-                            onChange={(e) => setName(e.target.value)}
-                          />
-                        </div>
-                        <div className="group">
-                          <label htmlFor="pass" className="label">
-                            Password
-                          </label>
-                          <input
-                            id="pass"
-                            name="pass"
-                            type="password"
-                            className="input"
-                            data-type="password"
-                            placeholder="Create your password"
-                            onChange={(e) => setPassword(e.target.value)}
-                          />
-                        </div>
-
-                        <div className="group">
-                          <label htmlFor="pass" className="label">
-                            Email Address
-                          </label>
-                          <input
-                            id="email"
-                            name="email"
-                            type="email"
-                            className="input"
-                            placeholder="Enter your email address"
-                            onChange={(e) => setEmail(e.target.value)}
-                          />
-                        </div>
-                        <div className="group">
-                          <input
-                            type="submit"
-                            className="button"
-                            value="Sign Up"
-                            onClick={createUser}
-                          />
-                        </div>
-                      </form>
-                    </div>
-                  )}
-                </div>
+          <br />
+          {log ? (
+            <>
+              <div className="form__group field">
+                <input
+                value={UserData.email}
+                onChange={changeHandler}
+                  type="email"
+                  name="email"
+                  className="form__field"
+                  placeholder="Email"
+                  required=""
+                  
+                />
+                <label htmlFor="email" className="form__label">
+                  Email
+                </label>
               </div>
-            </div>
-          </div>
+              <div className="form__group field">
+                <input
+                  type="password"
+                  className="form__field"
+                  placeholder="Password"
+                  name="password"
+                  required=""
+                  value={UserData.password}
+                  onChange={changeHandler}
+                />
+                <label htmlFor="password" className="form__label">
+                  Password
+                </label>
+              </div>
+              <button class="btn" onClick={login}> Button</button>
+            </>
+          ) : (
+            <>
+              <div className="form__group field">
+                <input
+                  type="text"
+                  className="form__field"
+                  placeholder="Username"
+                  required=""
+                  
+                  onChange={(e) => setUsername(e.target.value)}
+                />
+                <label htmlFor="username" className="form__label">
+                  Username
+                </label>
+              </div>
+              <div className="form__group field">
+                <input
+                  type="email"
+                  className="form__field"
+                  placeholder="Email"
+                  required=""
+                  
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+                <label htmlFor="email" className="form__label">
+                  Email
+                </label>
+              </div>
+              <div className="form__group field">
+                <input
+                  type="password"
+                  className="form__field"
+                  placeholder="Password"
+                  required=""
+                  
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+                <label htmlFor="password" className="form__label">
+                  Password
+                </label>
+              </div>
+              <button class="btn"  onClick={createUser}> Button</button>
+            </>
+          )}
         </div>
       </div>
     </div>

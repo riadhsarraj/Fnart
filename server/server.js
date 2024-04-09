@@ -22,6 +22,7 @@ app.post("/createUser", async (req,res)=>{
         return res.json({message :"user already exists !"})
     }
     const hashedpassword = bcrypt.hashSync(password ,10)
+    
     const newueser = new UserModel({
         name : name,
         password : hashedpassword ,
@@ -30,15 +31,33 @@ app.post("/createUser", async (req,res)=>{
     await newueser.save();
    return  res.json({message :"user created succefully"})
 })
-app.post("/login", async (req,res)=>{
-    const {password , email} = req.body
-    const user = await UserModel.findOne({email})
-    !user && res.json({message : "user doesn't exist!"})
-    const ispasswordvalid = await bcrypt.compare(password , user.password)
-    !ispasswordvalid && res.json({message : "username or password doesn't exist!"})
-    const token = jwt.sign({id: user._id}, process.env.SECRET )
-    return res.json({token, userID: user._id})
-})    
+//app.post("/login", async (req,res)=>{
+  //  const {password , email} = req.body
+ //   const user = await UserModel.findOne({email})
+ //   !user && res.json({message : "user doesn't exist!"})
+  //  const ispasswordvalid = await bcrypt.compare(password , user.password)
+  //  !ispasswordvalid && res.json({message : "username or password doesn't exist!"})
+  //  const token = jwt.sign({id: user._id}, process.env.SECRET )
+  //  return res.json({token, userID: user._id})
+//}) 
+
+app.post("/login", async (req, res) => {
+    let user = await UserModel.findOne({ email: req.body.email });
+    if (user) {
+        const ispasswordvalid = await bcrypt.compare(req.body.password , user.password)
+      if (ispasswordvalid) {
+        const token = jwt.sign({id: user._id}, process.env.SECRET )
+        res.json({ success: true, token });
+      } else {
+        res.json({ success: false, errors: "Mot de passe incorrect" });
+        console.log()
+      }
+    } else {
+      res.json({ success: false, errors: " Email incorrect" });
+    }
+  });
+
+  
 app.listen("3001", ()=> {
     console.log("hello ")
 });

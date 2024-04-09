@@ -2,6 +2,7 @@
 import React from 'react';
 import './reservation.css'
 import img from '../image/zzz.jpg'
+import img1 from '../image/logo.png'
 import {
   MDBBtn,
   MDBContainer,
@@ -17,8 +18,10 @@ from 'mdb-react-ui-kit';
 
 function App() {
   return (
+    <>
+     
     <MDBContainer className="my-5">
-
+   
       <MDBCard  className='a'>
         <MDBRow className='g-0'>
 
@@ -86,6 +89,8 @@ function App() {
               <div className='d-flex flex-row justify-content-start'>
                 <a href="#!" className="small text-muted me-1">Terms of use.</a>
                 <a href="#!" className="small text-muted">Privacy policy</a>
+
+        
               </div>
 
             </MDBCardBody>
@@ -95,6 +100,7 @@ function App() {
       </MDBCard>
 
     </MDBContainer>
+    </>
   );
 }
 
