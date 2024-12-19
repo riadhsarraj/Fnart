@@ -1,0 +1,126 @@
+.bod {
+  overflow: hidden;
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to right, rgba(0, 0, 0, 0.53), rgba(255, 255, 255, 0.273)), url('../image/mat.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+}
+
+.ss {
+  color: #f2f2f2;
+  font-family: "Jersey 20", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 5vw; /* Adjust the size to fit the screen */
+  text-align: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  white-space: nowrap; /* Ensure the text stays on one line */
+  z-index: 1;
+}
+.card {
+  width: 200px;
+  height: 335px;
+  padding: .8em;
+  margin: 40px;
+  margin-top: 30px;
+  background: #f5f5f5;
+  position: relative;
+  overflow: visible;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+ }
+ 
+ .img {
+  background-color: #35353565;
+  height: 40%;
+  width: 100%;
+  border-radius: .5rem;
+  transition: .3s ease;
+ }
+ .imgg{
+  width: 100%;
+  height: 100%;
+ }
+ 
+ .info {
+  padding-top: 10%;
+ }
+ 
+ svg {
+  width: 20px;
+  height: 20px;
+ }
+ 
+ .footer {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 10px;
+  border-top: 1px solid #ddd;
+ }
+ 
+ /*Text*/
+ .title {
+  font-weight: 900;
+  font-size: 1.2em;
+  line-height: 1.5;
+ }
+ 
+ .body {
+  font-size: .9em;
+  padding-bottom: 10px;
+ }
+ 
+ /*Button*/
+ .button {
+  border: 1px solid #252525;
+  display: flex;
+  padding: .3em;
+  cursor: pointer;
+  border-radius: 50px;
+  transition: .3s ease-in-out;
+ }
+ 
+ /*Hover*/
+ .img:hover {
+  transform: translateY(-25%);
+  box-shadow: rgba(43, 43, 43, 0.25) 0px 13px 47px -5px, rgba(38, 37, 37, 0.3) 0px 8px 16px -8px;
+ }
+ 
+ .button:hover {
+  border: 1px solid #5c2d0d;
+  background-color: #7e3b0e;
+ }
+ .part2 {
+  background: url('../image/backevent.jpg') no-repeat center center fixed;
+  background-size: cover;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+ .h1 {
+  font-family: "Playwrite CU", cursive;
+  font-optical-sizing: auto;
+  font-style: normal;
+  background-image: linear-gradient(to right, #310a00, #e67925); /* Dégradé de couleur */
+  -webkit-background-clip: text;
+  color: transparent;
+  font-size: 50px;
+  
+  margin-top: 30px;
+}

@@ -11,9 +11,7 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const [_, setCookies] = useCookies(["access_token"]);
-
   const [UserData, setUserData] = useState({
- 
     email: "",
     password: "",
   });
@@ -23,20 +21,11 @@ export default function Login() {
       username: username,
       password: password,
       email: email,
+      
+      
     });
     alert("user created");
   };
-
- // const login = async (e) => {
-  //  e.preventDefault();
-  //  const response = await Axios.post("http://localhost:3001/login", {
-  //    password: password,
-  //    email: email,
-  //  });
-  //  setCookies("access_token", response.data.token);
-  //  window.localStorage.setItem("userID", response.data.userID);
-  //  window.location.replace("/Home");
- // };
  const changeHandler = (e) => {
   setUserData({ ...UserData, [e.target.name]: e.target.value });
 
@@ -54,8 +43,16 @@ export default function Login() {
       .then((response) => response.json())
       .then((data) => (responseData = data));
     if (responseData.success) {
+      console.log("role :"+responseData.role)
+      if (responseData.role =="admin"){
+        localStorage.setItem("userID", responseData.token);
+        localStorage.setItem("role", responseData.role);
+        window.location.replace("/dashusers");
+      }
+      else{
       localStorage.setItem("userID", responseData.token);
       window.location.replace("/home");
+    }
     } else {
       alert(responseData.errors);
     }
@@ -99,8 +96,8 @@ export default function Login() {
                   name="email"
                   className="form__field"
                   placeholder="Email"
+                  autoComplete="false"
                   required=""
-                  
                 />
                 <label htmlFor="email" className="form__label">
                   Email
@@ -120,7 +117,7 @@ export default function Login() {
                   Password
                 </label>
               </div>
-              <button class="btn" onClick={login}> Button</button>
+              <button class="btn" onClick={login}> Connection</button>
             </>
           ) : (
             <>
@@ -130,7 +127,7 @@ export default function Login() {
                   className="form__field"
                   placeholder="Username"
                   required=""
-                  
+                  autoComplete="false"
                   onChange={(e) => setUsername(e.target.value)}
                 />
                 <label htmlFor="username" className="form__label">
@@ -143,7 +140,7 @@ export default function Login() {
                   className="form__field"
                   placeholder="Email"
                   required=""
-                  
+                  autoComplete="false"
                   onChange={(e) => setEmail(e.target.value)}
                 />
                 <label htmlFor="email" className="form__label">
@@ -156,14 +153,13 @@ export default function Login() {
                   className="form__field"
                   placeholder="Password"
                   required=""
-                  
                   onChange={(e) => setPassword(e.target.value)}
                 />
                 <label htmlFor="password" className="form__label">
                   Password
                 </label>
               </div>
-              <button class="btn"  onClick={createUser}> Button</button>
+              <button class="btn"  onClick={createUser}> Create</button>
             </>
           )}
         </div>

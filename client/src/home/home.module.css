@@ -1,0 +1,22 @@
+.image{
+    height: 650px;
+    width: 100%;
+}
+.h3{
+    font-family: "Titillium Web", sans-serif;
+  font-weight: 600;
+  font-style: normal;
+  font-size: 50px;
+  text-shadow: 0 0 15px rgba(255,255,255,.5), 0 0 10px rgba(255,255,255,.5);
+}
+.p{
+    font-size: 30px;
+    font-weight: 600;
+    
+}
+.div2{
+    background: url('../image/backevent.jpg') no-repeat center center fixed;
+    background-size: cover;
+    height: 100%;
+    
+}

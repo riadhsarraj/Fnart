@@ -1,107 +1,158 @@
+import React, { useState, useEffect } from "react";
+import "./reservation.css";
+import img from "../image/zzz.jpg";
+import Axios from "axios";
 
-import React from 'react';
-import './reservation.css'
-import img from '../image/zzz.jpg'
-import img1 from '../image/logo.png'
-import {
-  MDBBtn,
-  MDBContainer,
-  MDBCard,
-  MDBCardBody,
-  MDBCardImage,
-  MDBRow,
-  MDBCol,
-  MDBIcon,
-  MDBInput
-}
-from 'mdb-react-ui-kit';
+export default function Reservation() {
+  const [Fullname, setFullname] = useState("");
+  const [Number, setNumber] = useState("");
+  const [Cin, setCin] = useState("");
+  const [Email, setEmail] = useState("");
+  const [Event, setEvent] = useState("");
+  const [NumberPlaces, setNumberPlaces] = useState("");
+  const [events, setEvents] = useState([]);
 
-function App() {
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const response = await Axios.get("http://localhost:3001/allEvents");
+        setEvents(response.data.data);
+      } catch (error) {
+        console.error("Erreur lors de la récupération des événements", error);
+      }
+    };
+    fetchEvents();
+  }, []);
+
+  const createresrvation = async (e) => {
+    e.preventDefault();
+
+    try {
+      // Récupérer le nombre total de places déjà réservées pour cet événement
+      const response = await Axios.get(`http://localhost:3001/totalPlaces/${Event}`);
+      const totalReservedPlaces = response.data.totalReservedPlaces;
+
+      if (totalReservedPlaces + parseInt(NumberPlaces) > 50) {
+        alert("Le nombre total de places réservées pour cet événement dépasse 50. Veuillez choisir un autre événement ou réduire le nombre de places.");
+        return;
+      }
+
+      // Créer la réservation
+      await Axios.post("http://localhost:3001/createreservation", {
+        Fullname,
+        Number,
+        Cin,
+        Email,
+        Event,
+        NumberPlaces
+      });
+
+      alert("Reservation created");
+      window.location.replace("/reservation");
+    } catch (error) {
+      console.error("Erreur lors de la création de la réservation", error);
+      alert("Erreur lors de la création de la réservation");
+    }
+  };
+
   return (
-    <>
-     
-    <MDBContainer className="my-5">
-   
-      <MDBCard  className='a'>
-        <MDBRow className='g-0'>
-
-          <MDBCol md='6'>
-            <MDBCardImage src={img} alt="login form" className='rounded-start w-100' />
-          </MDBCol>
-
-          <MDBCol md='6'>
-            <MDBCardBody className='d-flex flex-column'>
-
-              <div className='d-flex flex-row mt-2'>
-                
-                <span className="h1 fw-bold mb-0">Reservation</span>
+    <div className="res">
+      <div className="card">
+        <div className="row">
+          <div className="col">
+            <img className="img" src={img} alt="" />
+          </div>
+          <div className="col">
+            <h2>Reservation</h2>
+            <div className="ff">
+              <div className="form__groupp field">
+                <input
+                  type="input"
+                  className="form__fieldd"
+                  placeholder="Name"
+                  name="Fullname"
+                  required=""
+                  onChange={(e) => setFullname(e.target.value)}
+                />
+                <label htmlFor="name" className="form__labell">
+                  Nom et Prénom
+                </label>
               </div>
 
-              <h5 className="fw-normal my-4 pb-3" style={{letterSpacing: '1px'}}>Sign into your account</h5>
-
-                <MDBInput wrapperClass='mb-4' label='Full name' id='formControlLg' type='text' size="lg"/>
-                <MDBInput wrapperClass='mb-4' label='Email' id='formControlLg' type='email' size="lg"/>
-                <MDBInput wrapperClass='mb-4' label='Phone' id='formControlLg' type='number' size="lg"/>
-                <div class="select">
-                <div
-                  class="selected"
-                  data-default="Event"
-                  data-one="option-1"
-                  data-two="option-2"
-                  data-three="option-3"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    height="1em"
-                    viewBox="0 0 512 512"
-                    class="arrow"
-                  >
-                    <path
-                      d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"
-                    ></path>
-                  </svg>
-                </div>
-                <div class="options">
-                  <div title="Event">
-                    <input id="all" name="option" type="radio" checked="true" />
-                    <label class="option" for="Event" data-txt="Event"></label>
-                  </div>
-                  <div title="option-1">
-                    <input id="option-1" name="option" type="radio" />
-                    <label class="option" for="option-1" data-txt="option-1"></label>
-                  </div>
-                  <div title="option-2">
-                    <input id="option-2" name="option" type="radio" />
-                    <label class="option" for="option-2" data-txt="option-2"></label>
-                  </div>
-                  <div title="option-3">
-                    <input id="option-3" name="option" type="radio" />
-                    <label class="option" for="option-3" data-txt="option-3"></label>
-                  </div>
-                </div>
+              <div className="form__groupp field">
+                <input
+                  type="number"
+                  className="form__fieldd number"
+                  placeholder="Name"
+                  name="number"
+                  required=""
+                  onChange={(e) => setNumber(e.target.value)}
+                />
+                <label htmlFor="name" className="form__labell number">
+                Numéro
+                </label>
               </div>
-
-
-              <MDBBtn className="mb-4 px-5" color='dark' size='lg'>Login</MDBBtn>
-              <a className="small text-muted" href="#!">Forgot password?</a>
-              <p className="mb-5 pb-lg-2" style={{color: '#393f81'}}>Don't have an account? <a href="#!" style={{color: '#393f81'}}>Register here</a></p>
-
-              <div className='d-flex flex-row justify-content-start'>
-                <a href="#!" className="small text-muted me-1">Terms of use.</a>
-                <a href="#!" className="small text-muted">Privacy policy</a>
-
-        
+            </div>
+            <br />
+            <div className="ff">
+              <div className="form__groupp field">
+                <input
+                  type="number"
+                  className="form__fieldd"
+                  placeholder="Name"
+                  name="CIN"
+                  required=""
+                  onChange={(e) => setCin(e.target.value)}
+                />
+                <label htmlFor="name" className="form__labell">
+                  CIN
+                </label>
               </div>
+              <div className="form__groupp field">
+                <input
+                  type="input"
+                  className="form__fieldd Email"
+                  placeholder="Name"
+                  name="Email"
+                  required=""
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+                <label htmlFor="name" className="form__labell Email">
+                  Email
+                </label>
+              </div>
+            </div>
 
-            </MDBCardBody>
-          </MDBCol>
-
-        </MDBRow>
-      </MDBCard>
-
-    </MDBContainer>
-    </>
+            <br />
+            <select name="pets" id="pet-select" onChange={(e) => setEvent(e.target.value)}>
+              <option value="">Événement</option>
+              {events.map((event) => (
+                <option key={event._id} value={event.Title}>
+                  {event.Title}
+                </option>
+              ))}
+            </select>
+            <br />
+            <div className="a">
+              <div className="form__group field">
+                <input
+                  type="number"
+                  className="form__fieldd"
+                  placeholder="Name"
+                  required=""
+                  onChange={(e) => setNumberPlaces(e.target.value)}
+                />
+                <label htmlFor="name" className="form__label">
+                Nombre de places
+                </label>
+              </div>
+            </div>
+            <button className="bb" onClick={createresrvation}>confirmer</button>
+          </div>
+        </div>
+        <div className="bg"></div>
+        <div className="blob"></div>
+      </div>
+    </div>
   );
 }
-
-export default App;
